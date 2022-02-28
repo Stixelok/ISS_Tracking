@@ -1,0 +1,24 @@
+from PIL import Image
+
+
+def makeanagliph(filename, delta):
+    stereopara = Image.open(filename)
+    imageR = stereopara.copy()
+    pixels = imageR.load()
+    pixels1 = stereopara.load()
+    x, y = imageR.size
+    for i in range(x):
+        for j in range(y):
+            r, g, b = pixels[i, j]
+            g = b = 0
+            pixels[i, j] = r, g, b
+    for i in range(delta, x):
+        for j in range(delta, y):
+            r, g, b = pixels1[i, j]
+            r1, g1, b1 = pixels[i - delta // 2, j - delta // 2]
+            r = r1
+            pixels1[i, j] = r, g, b
+    stereopara.save('res.jpg')
+
+
+makeanagliph("image.jpg", 10)
